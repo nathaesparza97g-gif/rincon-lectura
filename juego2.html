@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory de la Ruta - Rincón de la Lectura</title>
+<link href="https://fonts.googleapis.com/css?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background: linear-gradient(135deg, #fff3e0, #e0f7fa);
+    font-family: 'Quicksand', sans-serif;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    user-select: none;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-family: 'Fredoka One', cursive;
+    color: #FF851B;
+    font-size: 2.3rem;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+header p {
+    font-size: 1.05rem;
+    color: #555;
+    font-weight: 700;
+}
+
+.juego-contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    max-width: 650px;
+    width: 100%;
+}
+
+.info-juego {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: #0074D9;
+}
+
+/* TABLERO DE MEMORY (GRILLA) */
+.tablero-memoria {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 25px;
+}
+
+.carta {
+    aspect-ratio: 1;
+    background-color: #FF851B;
+    border-radius: 15px;
+    cursor: pointer;
+    perspective: 1000px;
+    position: relative;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.carta:hover {
+    transform: scale(1.05);
+}
+
+.carta-inner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.4s;
+    transform-style: preserve-3d;
+    border-radius: 15px;
+}
+
+.carta.volteada .carta-inner {
+    transform: rotateY(180deg);
+}
+
+.carta-front, .carta-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carta-front {
+    background-color: #FF851B;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    border: 3px solid #e67300;
+}
+
+.carta-back {
+    background-color: #ffffff;
+    border: 3px solid #FF851B;
+    transform: rotateY(180deg);
+    padding: 10px;
+}
+
+.carta-back img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.acciones-inferiores {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-accion {
+    background: #2ECC40;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #218838;
+    transition: all 0.1s;
+}
+
+.btn-accion:active {
+    transform: translateY(3px);
+    box-shadow: none;
+}
+
+.btn-volver {
+    background: #FF4136;
+    box-shadow: 0 4px 0 #c82333;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 50px;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+}
+
+/* MENSAJE DE VICTORIA */
+#mensaje-victoria {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 5px solid #FFD700;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    z-index: 1000;
+    animation: aparecer 0.3s ease-out;
+}
+
+#mensaje-victoria h2 {
+    font-family: 'Fredoka One', cursive;
+    color: #2ECC40;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+@keyframes aparecer {
+    from { transform: translate(-50%, -60%) scale(0.8); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>2. Memory de la Ruta</h1>
+    <p>¡Encuentra todas las parejas de imágenes tradicionales de nuestra cultura e historia!</p>
+</header>
+
+<div class="juego-contenedor">
+    <div class="info-juego">
+        <span id="contador-movimientos">Movimientos: 0</span>
+        <span id="contador-parejas">Parejas: 0 / 4</span>
+    </div>
+
+    <!-- TABLERO -->
+    <div class="tablero-memoria" id="tablero"></div>
+
+    <div class="acciones-inferiores">
+        <button class="btn-accion" onclick="reiniciarJuego()">Reiniciar</button>
+        <a href="javascript:window.close();" class="btn-volver">Cerrar Juego</a>
+    </div>
+</div>
+
+<!-- VENTANA DE VICTORIA -->
+<div id="mensaje-victoria">
+    <h2>¡Excelente Memoria!</h2>
+    <p>Has encontrado todas las parejas de la ruta del peregrino.</p>
+    <button class="btn-accion" onclick="reiniciarJuego(); cerrarVictoria();" style="margin-top: 15px;">Jugar de Nuevo</button>
+</div>
+
+<script>
+// Imágenes de las parejas para el Memory (puedes cambiar los nombres de archivo por los tuyos)
+const imagenesRuta = [
+    { id: 1, img: 'ruta 1.jpg' }, 
+    { id: 2, img: 'ruta 2.jpg' },
+    { id: 3, img: 'ruta 3.jpg' },
+    { id: 4, img: 'ruta 4.jpg' }
+];
+
+let cartasBarajadas = [];
+let cartaPulsada1 = null;
+let cartaPulsada2 = null;
+let bloqueadoTablero = false;
+let movimientos = 0;
+let parejasEncontradas = 0;
+
+function iniciarJuegoMemoria() {
+    // Duplicar para hacer parejas (4 parejas = 8 cartas)
+    cartasBarajadas = [...imagenesRuta, ...imagenesRuta]
+        .sort(() => Math.random() - 0.5);
+
+    const tablero = document.getElementById('tablero');
+    tablero.innerHTML = '';
+
+    cartasBarajadas.forEach((item, index) => {
+        const carta = document.createElement('div');
+        carta.classList.add('carta');
+        carta.dataset.id = item.id;
+
+        carta.innerHTML = `
+            <div class="carta-inner">
+                <div class="carta-front">?</div>
+                <div class="carta-back">
+                    <img src="${item.img}" alt="Item Memoria" onerror="this.src='https://via.placeholder.com/100/FF851B/fff?text=Im${item.id}'">
+                </div>
+            </div>
+        `;
+
+        carta.addEventListener('click', voltearCarta);
+        tablero.appendChild(carta);
+    });
+
+    movimientos = 0;
+    parejasEncontradas = 0;
+    actualizarMarcador();
+}
+
+function voltearCarta() {
+    if (bloqueadoTablero) return;
+    if (this === cartaPulsada1) return;
+    if (this.classList.contains('volteada')) return;
+
+    this.classList.add('volteada');
+
+    if (!cartaPulsada1) {
+        cartaPulsada1 = this;
+        return;
+    }
+
+    cartaPulsada2 = this;
+    movimientos++;
+    actualizarMarcador();
+    comprobarPareja();
+}
+
+function comprobarPareja() {
+    const coincide = cartaPulsada1.dataset.id === cartaPulsada2.dataset.id;
+
+    if (coincide) {
+        desactivarCartas();
+    } else {
+        desvoltearCartas();
+    }
+}
+
+function desactivarCartas() {
+    cartaPulsada1.removeEventListener('click', voltearCarta);
+    cartaPulsada2.removeEventListener('click', voltearCarta);
+
+    parejasEncontradas++;
+    actualizarMarcador();
+
+    resetearTurno();
+
+    if (parejasEncontradas === imagenesRuta.length) {
+        setTimeout(() => {
+            document.getElementById('mensaje-victoria').style.display = 'block';
+        }, 400);
+    }
+}
+
+function desvoltearCartas() {
+    bloqueadoTablero = true;
+    setTimeout(() => {
+        cartaPulsada1.classList.remove('volteada');
+        cartaPulsada2.classList.remove('volteada');
+        resetearTurno();
+    }, 900);
+}
+
+function resetearTurno() {
+    [cartaPulsada1, cartaPulsada2] = [null, null];
+    bloqueadoTablero = false;
+}
+
+function actualizarMarcador() {
+    document.getElementById('contador-movimientos').innerText = `Movimientos: ${movimientos}`;
+    document.getElementById('contador-parejas').innerText = `Parejas: ${parejasEncontradas} / ${imagenesRuta.length}`;
+}
+
+function reiniciarJuego() {
+    document.getElementById('mensaje-victoria').style.display = 'none';
+    iniciarJuegoMemoria();
+}
+
+// Inicializar al cargar la página
+iniciarJuegoMemoria();
+</script>
+
+</body>
+</html>

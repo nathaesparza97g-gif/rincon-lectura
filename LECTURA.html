@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuentos de Nuestra Comunidad</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==================== ESTILOS CSS ==================== */
+        
+        /* RESET GENERAL */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #ffffff; /* Cuerpo de la página de color blanco */
+            font-family: 'Quicksand', sans-serif;
+            color: #333333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ENCABEZADO: FRANJA DE COLOR CELESTE */
+        .franja-celeste-header {
+            background-color: #87CEEB; /* Celeste */
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            border-bottom: 5px solid #62b5d8;
+        }
+
+        .logo-contenedor img {
+            max-height: 90px;
+            width: auto;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .titulos-principales h1 {
+            font-family: 'Fredoka One', cursive; /* Letra bonita y llamativa */
+            font-size: 2.3rem;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+        }
+
+        .titulos-principales h2 {
+            font-size: 1.05rem;
+            color: #ffffff;
+            margin-top: 6px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* NAVEGACIÓN: FRANJA DE COLOR ROJO */
+        .franja-roja-nav {
+            background-color: #FF4136; /* Rojo */
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 14px 10px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-nav {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: #ffffff;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.15rem;
+            padding: 10px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-nav:hover, .btn-nav.active {
+            background-color: #ffffff;
+            color: #FF4136;
+            transform: scale(1.05);
+        }
+
+        /* CONTENEDOR DEL CUERPO (BLANCO) */
+        .cuerpo-blanco {
+            background-color: #ffffff;
+            flex-grow: 1;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .seccion-contenido {
+            display: none; /* Se ocultan para simular las pestañas */
+        }
+
+        .seccion-contenido.active {
+            display: block; /* Solo se muestra la pestaña seleccionada */
+        }
+
+        /* SECCIÓN INICIO - CUADRO DE BIENVENIDA */
+        .cuadro-bienvenida {
+            background-color: #ffffff;
+            border: 4px dashed #87CEEB; /* Borde celeste */
+            border-radius: 24px;
+            padding: 50px 30px;
+            text-align: center;
+            max-width: 850px;
+            margin: 40px auto;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+        }
+
+        .cuadro-bienvenida h3 {
+            font-family: 'Fredoka One', cursive;
+            color: #0074D9;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .cuadro-bienvenida p {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            color: #555555;
+            margin-bottom: 30px;
+        }
+
+        .btn-enlace {
+            background-color: #2ECC40; /* Verde llamativo */
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.25rem;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 0px #26a034;
+            transition: all 0.1s ease;
+        }
+
+        .btn-enlace:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* CUADROS EN HORIZONTAL (ESTRUCTURA DE COLUMNAS) */
+        .contenedor-horizontal {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        .tres-columnas .cuadro-tarjeta {
+            width: 33.33%;
+        }
+
+        .cuatro-columnas .cuadro-tarjeta {
+            width: 25%;
+        }
+
+        /* DISEÑO DE CADA CUADRO / TARJETA */
+        .cuadro-tarjeta {
+            background: #ffffff;
+            border: 3px solid #e1e1e1;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .imagen-cuadro {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 3px solid #e1e1e1;
+        }
+
+        .contenido-tarjeta {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .contenido-tarjeta h3 {
+            font-family: 'Fredoka One', cursive;
+            color: #FF4136;
+            margin-bottom: 12px;
+            font-size: 1.35rem;
+        }
+
+        /* Scroll interno para los cuadros de Loja y la Escuela */
+        .scroll-interno {
+            max-height: 320px;
+            overflow-y: auto;
+            font-size: 0.98rem;
+            line-height: 1.5;
+            padding-right: 8px;
+        }
+
+        .scroll-interno ul {
+            margin: 10px 0 10px 20px;
+        }
+
+        .scroll-interno li {
+            margin-bottom: 5px;
+        }
+
+        /* ESTILOS DE LA BIBLIOTECA */
+        .destacado {
+            border: 3px solid #FFD700; /* Cuadro principal con borde dorado */
+            position: relative;
+            box-shadow: 0 12px 24px rgba(255, 215, 0, 0.15);
+        }
+
+        .etiqueta-principal {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background-color: #FFD700;
+            color: #222;
+            font-family: 'Fredoka One', cursive;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .contenido-tarjeta h4 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.05rem;
+            color: #333;
+            margin-bottom: 15px;
+            min-height: 40px;
+            text-align: center;
+        }
+
+        .grupo-botones {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-multimedia {
+            text-align: center;
+            text-decoration: none;
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-multimedia.video { background-color: #FF4136; }
+        .btn-multimedia.cuento { background-color: #0074D9; }
+        .btn-multimedia.audio { background-color: #2ECC40; }
+        .btn-multimedia:hover { opacity: 0.85; }
+
+        /* SECCIÓN JUEGOS */
+        .grid-juegos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+        }
+
+        .tarjeta-juego {
+            background: #ffffff;
+            border: 3px dashed #2ECC40;
+            border-radius: 20px;
+            padding: 22px;
+            width: calc(50% - 15px);
+            min-width: 290px;
+        }
+
+        .tarjeta-juego.ancho-completo { 
+            width: 100%; 
+        }
+
+        .tarjeta-juego h5 {
+            font-family: 'Fredoka One', cursive;
+            color: #2ECC40;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .input-archivo {
+            margin: 10px 0;
+        }
+
+        .espacio-imagen-juego img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            border: 2px solid #eee;
+            margin-top: 10px;
+        }
+
+        /* Juego 3 - Completar la oración */
+        .instruccion-juego { 
+            font-size: 1.05rem; 
+            margin-bottom: 12px; 
+            color: #555; 
+        }
+
+        .banco-palabras {
+            background-color: #f7f9fa;
+            padding: 12px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .banco-palabras span {
+            background: white;
+            border: 2px solid #2ECC40;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #0074D9;
+        }
+
+        .oracion-completar {
+            background: #fff;
+            border: 2px solid #eee;
+            padding: 20px;
+            border-radius: 12px;
+            line-height: 2.3;
+            font-size: 1.15rem;
+            text-align: justify;
+        }
+
+        .linea-blanco {
+            color: #FF4136;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+    /* SECCIÓN JUEGOS: GRILLA 3 ARRIBA Y 2 ABAJO, CON DIFERENTES COLORES */
+.lista-juegos-contenedor {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    justify-content: center;
+}
+
+/* Las últimas 2 tarjetas se centran abajo o se distribuyen bien en la grilla */
+.lista-juegos-contenedor .enlace-juego-tarjeta:nth-child(4) {
+    grid-column: 1 / 2;
+}
+.lista-juegos-contenedor .enlace-juego-tarjeta:nth-child(5) {
+    grid-column: 2 / 3;
+}
+
+/* Para que la cuarta y quinta queden perfectamente centradas abajo en la segunda fila, podemos usar grid-column */
+.enlace-juego-tarjeta {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    transition: transform 0.2s, filter 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+}
+
+.enlace-juego-tarjeta:hover {
+    transform: scale(1.03);
+    filter: brightness(0.95);
+}
+
+/* Colores llamativos independientes para cada tarjeta de juego */
+.juego-1 { background-color: #FF4136; border: 3px solid #d32f2f; grid-column: 1; grid-row: 1; }
+.juego-2 { background-color: #FF851B; border: 3px solid #e67300; grid-column: 2; grid-row: 1; }
+.juego-3 { background-color: #2ECC40; border: 3px solid #239b31; grid-column: 3; grid-row: 1; }
+.juego-4 { background-color: #0074D9; border: 3px solid #0056b3; grid-column: 1 / span 1; justify-self: end; width: 100%; } /* Ajuste elegante para centrar las de abajo */
+.juego-5 { background-color: #B10DC9; border: 3px solid #8e0b9e; }
+
+/* Contenedor fila inferior para centrar exacto las 2 de abajo (3 arriba, 2 abajo) */
+.fila-inferior-juegos {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.fila-inferior-juegos .enlace-juego-tarjeta {
+    width: 320px;
+}
+
+.enlace-juego-tarjeta a {
+    font-family: 'Fredoka One', cursive;
+    color: #ffffff;
+    font-size: 1.5rem;
+    text-decoration: none;
+    display: inline-block;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+}
+.enlace-juego-tarjeta a:hover {
+    text-decoration: underline;
+}
+
+        /* PIE DE PÁGINA: FRANJA DE COLOR CELESTE */
+        .franja-celeste-footer {
+            background-color: #87CEEB; /* Celeste */
+            color: #ffffff;
+            text-align: center;
+            padding: 25px 20px;
+            margin-top: auto;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            border-top: 5px solid #62b5d8;
+        }
+
+        /* DISEÑO RESPONSIVO (PANTALLAS MEDIANAS O CELULARES) */
+        @media (max-width: 950px) {
+            .franja-celeste-header { flex-direction: column; gap: 15px; }
+            .contenedor-horizontal { flex-direction: column; }
+            .tres-columnas .cuadro-tarjeta, .cuatro-columnas .cuadro-tarjeta { width: 100%; }
+            .tarjeta-juego { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="franja-celeste-header">
+        <div class="logo-contenedor">
+            <img src="LOGO.png" alt="Logo Universidad" onerror="this.src='https://via.placeholder.com/120x90?text=Logo+UNL'">
+        </div>
+        <div class="titulos-principales">
+            <h1>CUENTOS DE NUESTRA COMUNIDAD</h1>
+            <h2>CARRERA DE PEDAGOGÍA DE LAS CIENCIAS EXPERIMENTALES INFORMÁTICA</h2>
+        </div>
+        <div class="logo-contenedor">
+            <img src="LOGO DE LA INSTITUCION.jpeg" alt="Logo Escuela" onerror="this.src='https://via.placeholder.com/120x90?text=Logo+Escuela'">
+        </div>
+    </header>
+
+    <nav class="franja-roja-nav">
+        <button class="btn-nav active" onclick="cambiarSeccion('inicio')">INICIO</button>
+        <button class="btn-nav" onclick="cambiarSeccion('nuestra-comunidad')">NUESTRA COMUNIDAD</button>
+        <button class="btn-nav" onclick="cambiarSeccion('biblioteca')">BIBLIOTECA</button>
+        <button class="btn-nav" onclick="cambiarSeccion('juegos')">JUEGOS</button>
+    </nav>
+    
+    <main class="cuerpo-blanco">
+
+        <section id="inicio" class="seccion-contenido active">
+            <div class="cuadro-bienvenida">
+                <h3>BIENVENIDOS AL RINCÓN DE LA LECTURA VIRTUAL</h3>
+                <p>Este espacio ha sido creado para compartir historias relevantes de la comunidad, fortalecer la identidad cultural y motivar el amor por la lectura en los niños.</p>
+                <button class="btn-enlace" onclick="cambiarSeccion('biblioteca')">Ir a BIBLIOTECA</button>
+            </div>
+        </section>
+
+        <section id="nuestra-comunidad" class="seccion-contenido">
+            <div class="contenedor-horizontal tres-columnas">
+                
+                <div class="cuadro-tarjeta">
+                    <img src="loja.jpg" alt="Ciudad de Loja" class="imagen-cuadro" onerror="this.src='https://via.placeholder.com/350x200?text=Imagen+Loja'">
+                    <div class="contenido-tarjeta scroll-interno">
+                        <h3>Ciudad de Loja</h3>
+                        <p><strong>Ubicación:</strong> Loja es una ciudad del sur del Ecuador y es la capital de la provincia de Loja. Se encuentra cerca de la frontera con Perú y es conocida por su clima agradable y sus paisajes montañosos.</p>
+                        <p><strong>¿Por qué es famosa?</strong> Loja es llamada la “Capital Cultural y Musical del Ecuador” porque tiene una gran tradición artística, especialmente en la música, literatura y arte.</p>
+                        <p><strong>Cultura:</strong> Los lojanos son conocidos por ser amables y trabajadores. Existe mucho interés por la música, el arte y la educación. En Loja se realizan conciertos, festivales y actividades culturales durante todo el año.</p>
+                        <p><strong>Música:</strong> Loja tiene muchos músicos y compositores famosos. Aquí se encuentra el importante Conservatorio de Música Salvador Bustamante Celi.</p>
+                        <p><strong>Comidas típicas:</strong></p>
+                        <ul>
+                            <li><strong>Repe lojano:</strong> sopa hecha con guineo verde, queso y leche.</li>
+                            <li><strong>Cecina lojana:</strong> carne de cerdo sazonada y asada.</li>
+                            <li>Tamales lojanos.</li>
+                            <li>Humitas.</li>
+                            <li>Miel con quesillo.</li>
+                            <li><strong>Horchata lojana:</strong> bebida preparada con varias hierbas medicinales y flores.</li>
+                        </ul>
+                        <p><strong>Tradiciones y fiestas:</strong></p>
+                        <ul>
+                            <li><strong>Fiesta de la Virgen del Cisne:</strong> Es una de las celebraciones religiosas más importantes del Ecuador. Miles de personas participan en peregrinaciones.</li>
+                            <li><strong>Festival Internacional de Artes Vivas:</strong> Es un evento cultural muy importante donde participan artistas nacionales e internacionales.</li>
+                        </ul>
+                        <p><strong>Lugares turísticos:</strong> Parque Nacional Podocarpus, Puerta de la Ciudad, Parque Jipiro, Iglesias y parques del centro histórico.</p>
+                        <p><strong>Economía:</strong> Se basa en la agricultura, ganadería, comercio, turismo y educación universitaria.</p>
+                        <p><strong>Datos curiosos:</strong> Tiene gran cantidad de estudiantes universitarios, es una de las ciudades más tranquilas y limpias, y su clima es templado todo el año.</p>
+                    </div>
+                </div>
+
+                <div class="cuadro-tarjeta">
+                    <img src="escuela.jpg" alt="Escuela Rosa Josefina Burneo" class="imagen-cuadro" onerror="this.src='https://via.placeholder.com/350x200?text=Imagen+Escuela'">
+                    <div class="contenido-tarjeta scroll-interno">
+                        <h3>Institución Receptora</h3>
+                        <p>La Escuela de Educación Básica Rosa Josefina Burneo de Burneo, ubicada en la ciudad de Loja, en el barrio Turunuma, en la Av. Barcelona, cerca del ECU 911, parroquia Sucre, fue parte del proyecto de vinculación con la sociedad titulado “Cuentos, costumbres, tradiciones y saberes para la interculturalidad en instituciones educativas”, el cual busca rescatar y valorar los saberes ancestrales, las tradiciones locales y la riqueza cultural de nuestras comunidades a través de la creación literaria y la práctica pedagógica.</p>
+                        <p>En el marco de este proyecto, se elaboró un cuento, pensado especialmente para enriquecer los procesos educativos desde un enfoque intercultural. Este material, adaptado al contexto de la institución y sus estudiantes, promueve la lectura, la reflexión y el diálogo entre culturas, fortaleciendo así el sentido de identidad y pertenencia.</p>
+                        <p>Nos complace informar que este cuento y el material producido quedarán en la Escuela de Educación Básica Rosa Josefina Burneo de Burneo, donde servirán como recurso educativo para docentes y estudiantes. Su uso contribuirá a dinamizar las clases, promover el pensamiento crítico y fomentar el respeto a la diversidad cultural.</p>
+                    </div>
+                </div>
+
+                <div class="cuadro-tarjeta">
+                    <img src="autora.jpeg" alt="Mgtr. Andrea Betancourt" class="imagen-cuadro" onerror="this.src='https://via.placeholder.com/350x200?text=Imagen+Autora'">
+                    <div class="contenido-tarjeta">
+                        <h3>Biografía del Autor</h3>
+                        <p>La <strong>Mgtr. Andrea Betancourt</strong> es una destacada educadora y profesional clave en la guía metodológica y creación literaria de este proyecto de vinculación con la sociedad. Su labor fomenta el rescate cultural, la identidad lojana y el amor por la lectura en las aulas de educación inicial.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="biblioteca" class="seccion-contenido">
+            <div class="contenedor-horizontal cuatro-columnas">
+                
+                <div class="cuadro-tarjeta destacado">
+                    <div class="etiqueta-principal">Principal</div>
+                    <img src="portada.png" alt="Caminata de la Virgen del Cisne" class="imagen-cuadro" onerror="this.src='https://via.placeholder.com/350x180?text=Caminata+Virgen+del+Cisne'">
+                    <div class="contenido-tarjeta">
+                        <h4>CAMINATA DE LA VIRGEN DEL CISNE</h4>
+                        <div class="grupo-botones">
+                           <a href="video cuento 1.mp4" target="_blank" class="btn-multimedia video">VIDEO CUENTO</a>
+                           <a href="cuento digital.pdf" target="_blank" class="btn-multimedia cuento">CUENTO DIGITAL</a>
+                            <a href="audio cuento.mp3" target="_blank" class="btn-multimedia audio">AUDIO CUENTO</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cuadro-tarjeta">
+                    <img src="cuento 2.jpeg" alt="Leyenda de la Virgen del Rosario" class="imagen-cuadro" onerror="this.src='https://via.placeholder.com/350x180?text=Virgen+del+Rosario'">
+                    <div class="contenido-tarjeta">
+                        <h4>CUENTO 2. LEYENDA DE LA VIRGEN DEL ROSARIO</h4>
+                        <div class="grupo-botones">
+                            <a href="video 2.mp4" class="btn-multimedia video">VIDEO CUENTO</a>
+                            <a href="https://canva.link/mpqv5z6nke9vwfr" class="btn-multimedia cuento">CUENTO DIGITAL</a>
+                            <a href="audio cuento  2.mp3" class="btn-multimedia audio">AUDIO CUENTO</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cuadro-tarjeta">
+                    <img src="cuento 3.jpeg" alt="El Camino de los Ahorcados" class="imagen-cuadro" onerror="this.src='https://via.placeholder.com/350x180?text=El+Camino+de+los+Ahorcados'">
+                    <div class="contenido-tarjeta">
+                        <h4>CUENTO 3. EL CAMINO DE LOS AHORCADOS</h4>
+                        <div class="grupo-botones">
+                            <a href="https://drive.google.com/file/d/1Q4snPnt5xr9-atj5ZDuagj3KB18xcptv/view?usp=drivesdk"target="_blank" class="btn-multimedia video">VIDEO CUENTO</a>
+                            <a href="https://heyzine.com/flip-book/7a83563b9c.html" class="btn-multimedia cuento">CUENTO DIGITAL</a>
+                            <a href="Audio cuento 3.mp3" class="btn-multimedia audio">AUDIO CUENTO</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cuadro-tarjeta">
+                    <img src="cuento 4.jpeg" alt="Los Gagones de Malacatos" class="imagen-cuadro" onerror="this.src='https://via.placeholder.com/350x180?text=Los+Gagones+de+Malacatos'">
+                    <div class="contenido-tarjeta">
+                        <h4>CUENTO 4. LOS GAGONES DE MALACATOS</h4>
+                        <div class="grupo-botones">
+                            <a href="video cuento 4.mp4" class="btn-multimedia video">VIDEO CUENTO</a>
+                            <a href="https://www.calameo.com/books/008002334b2a64f47266c" class="btn-multimedia cuento">CUENTO DIGITAL</a>
+                            <a href="audio cuento 4.mp3" class="btn-multimedia audio">AUDIO CUENTO</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    <!-- SECCIÓN JUEGOS: 3 arriba y 2 abajo con colores llamativos y Fredoka One -->
+    <section id="juegos" class="seccion-contenido">
+        <h2 style="font-family: 'Fredoka One', cursive; text-align: center; color: #FF4136; margin: 30px 0;">¡A Jugar y Aprender!</h2>
+        
+        <div class="lista-juegos-contenedor">
+            <!-- Fila superior (3 juegos) -->
+            <div class="enlace-juego-tarjeta juego-1">
+                <a href="juego1.html" target="_blank">1. Memoria del Peregrino</a>
+            </div>
+            <div class="enlace-juego-tarjeta juego-2">
+                <a href="juego2.html" target="_blank">2. Memory de la Ruta</a>
+            </div>
+            <div class="enlace-juego-tarjeta juego-3">
+                <a href="juego3.html" target="_blank">3. Quiz del Peregrino</a>
+            </div>
+            
+            <!-- Fila inferior (2 juegos centrados) -->
+            <div class="fila-inferior-juegos">
+                <div class="enlace-juego-tarjeta juego-4">
+                    <a href="juego4.html" target="_blank">4. Sopa de Letras</a>
+                </div>
+                <div class="enlace-juego-tarjeta juego-5">
+                    <a href="juego5.html" target="_blank">5. Rompecabezas</a>
+                </div>
+            </div>
+        </div>
+        </section>
+
+    </main>
+
+    <footer class="franja-celeste-footer">
+        <p>UNIVERSIDAD NACIONAL DE LOJA | PROYECTO DE VINCULACIÓN</p>
+    </footer>
+
+    <script>
+        function cambiarSeccion(idSeccion) {
+            // 1. Ocultar todos los contenidos de las secciones
+            const secciones = document.querySelectorAll('.seccion-contenido');
+            secciones.forEach(sec => sec.classList.remove('active'));
+
+            // 2. Quitar el color activo a todos los botones del menú
+            const botones = document.querySelectorAll('.btn-nav');
+            botones.forEach(btn => btn.classList.remove('active'));
+
+            // 3. Mostrar el contenido de la sección seleccionada
+            document.getElementById(idSeccion).classList.add('active');
+
+            // 4. Activar visualmente el botón correspondiente
+            botones.forEach(btn => {
+                if(btn.getAttribute('onclick').includes(idSeccion)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // 5. Mover la pantalla suavemente hacia arriba
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    </script>
+</body>
+</html>
